@@ -3,21 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>不用看了，这是我留的一个样式模板 | MontagePa</title>
+  <title>Windows下多个Mysql实例配置主从 | MontagePa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info.If you get any problems when using Hexo, you can find the answer in troubleshooting oryou can ask me on GitHub.
-Quick S">
+  <meta name="description" content="序：    网上有很多类似的文章，也是各种百度出来的，但是对于多数刚开始接触MYSQL主从的小白来说，网上文章的代码里面很多技术点都没有理解，有跌打误撞碰上的，但多数都是这篇文章卡主了，换篇文章接着卡。- -。    下面真正开始写教程之前，我希望你能够先完整的看完，再去敲代码。    方法适用于MYSQL 5.1之后的版本。之前的版本，自行百度。Mysql的主从是个什么德行我就不解释了。不然你也">
 <meta property="og:type" content="article">
-<meta property="og:title" content="不用看了，这是我留的一个样式模板">
-<meta property="og:url" content="http://montagepa.cn/2016/06/13/hello-world/index.html">
+<meta property="og:title" content="Windows下多个Mysql实例配置主从">
+<meta property="og:url" content="http://montagepa.cn/2015/01/08/mysql-master-slave-config/index.html">
 <meta property="og:site_name" content="MontagePa">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info.If you get any problems when using Hexo, you can find the answer in troubleshooting oryou can ask me on GitHub.
-Quick S">
-<meta property="og:updated_time" content="2016-06-29T06:22:49.822Z">
+<meta property="og:description" content="序：    网上有很多类似的文章，也是各种百度出来的，但是对于多数刚开始接触MYSQL主从的小白来说，网上文章的代码里面很多技术点都没有理解，有跌打误撞碰上的，但多数都是这篇文章卡主了，换篇文章接着卡。- -。    下面真正开始写教程之前，我希望你能够先完整的看完，再去敲代码。    方法适用于MYSQL 5.1之后的版本。之前的版本，自行百度。Mysql的主从是个什么德行我就不解释了。不然你也">
+<meta property="og:image" content="http://o9isa6w17.bkt.clouddn.com/20150108101611819.png">
+<meta property="og:updated_time" content="2016-06-29T06:22:04.112Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不用看了，这是我留的一个样式模板">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info.If you get any problems when using Hexo, you can find the answer in troubleshooting oryou can ask me on GitHub.
-Quick S">
+<meta name="twitter:title" content="Windows下多个Mysql实例配置主从">
+<meta name="twitter:description" content="序：    网上有很多类似的文章，也是各种百度出来的，但是对于多数刚开始接触MYSQL主从的小白来说，网上文章的代码里面很多技术点都没有理解，有跌打误撞碰上的，但多数都是这篇文章卡主了，换篇文章接着卡。- -。    下面真正开始写教程之前，我希望你能够先完整的看完，再去敲代码。    方法适用于MYSQL 5.1之后的版本。之前的版本，自行百度。Mysql的主从是个什么德行我就不解释了。不然你也">
+<meta name="twitter:image" content="http://o9isa6w17.bkt.clouddn.com/20150108101611819.png">
   
     <link rel="alternative" href="/atom.xml" title="MontagePa" type="application/atom+xml">
   
@@ -210,11 +209,11 @@ Quick S">
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mysql-master-slave-config" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/06/13/hello-world/" class="article-date">
-      <time datetime="2016-06-13T11:23:02.386Z" itemprop="datePublished">2016-06-13</time>
+      <a href="/2015/01/08/mysql-master-slave-config/" class="article-date">
+      <time datetime="2015-01-07T16:00:00.000Z" itemprop="datePublished">2015-01-08</time>
 </a>
     </div>
   
@@ -227,7 +226,7 @@ Quick S">
         
   
     <h1 class="article-title" itemprop="name">
-      不用看了，这是我留的一个样式模板
+      Windows下多个Mysql实例配置主从
     </h1>
   
 
@@ -238,7 +237,7 @@ Quick S">
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Code/">Code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/win/">win</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -248,16 +247,43 @@ Quick S">
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info.<br>If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or<br>you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><a id="more"></a>
-<h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>序：<br>    网上有很多类似的文章，也是各种百度出来的，但是对于多数刚开始接触MYSQL主从的小白来说，网上文章的代码里面很多技术点都没有理解，有跌打误撞碰上的，但多数都是这篇文章卡主了，换篇文章接着卡。- -。<br>    下面真正开始写教程之前，我希望你能够先完整的看完，再去敲代码。<br>    方法适用于MYSQL 5.1之后的版本。之前的版本，自行百度。<br>Mysql的主从是个什么德行我就不解释了。不然你也不会搜不到这篇文章。<br><a id="more"></a></p>
+<p>环境：<br>w7 64位。<br>    mysql 5.5.24…（也就是多数大家装的wamp包里面的版本）<br>其实应该是要在 linux里面去做这件事的，但是仅仅是为了了解，学习这个主从，大多数人还是windows下的平台，So…不解释。<br>首先你要在你的windows下再装一个mysql实例（不要妄想着一个Mysql实例，里面弄两个库然后他们配置主从，这个我可没玩过，有兴趣的同学可以尝试一下），意味着你要分配不同的端口。<br>windows下安装多个mysql的过程看下面这篇文章就好了。<br><a href="http://blog.csdn.net/zuxianghaung/article/details/7272557" target="_blank" rel="external">http://blog.csdn.net/zuxianghaung/article/details/7272557</a></p>
+<p>这是用到的软件包<br><a href="http://yunpan.cn/cySt9WkiiTDPa" target="_blank" rel="external">http://yunpan.cn/cySt9WkiiTDPa</a> 提取码 42e8<br>（看我多么良心，连软件都给你准备好了，不用你去各大垃圾下载站去下载了。再次注意你的环境，保证跟我的一样，以及数据库版本）</p>
+<p>OK。我就当你已经配置好了第二个mysql实例。<br>下面两个bat 文件代码，用来帮你快速启动关闭你的新服务<br>startmysql.bat</p>
+<p>@ECHO OFF<br>net start mysql5.5<br>pause</p>
+<p>stopmysql.bat</p>
+<p>@ECHO OFF<br>net stop mysql5.5</p>
+<p>pause</p>
+<p>这个mysql5.5 是你第二个实例的服务名称，stop停止服务,start 开启服务，不解释了。<br>别忘了进去你第二个Mysql实例瞅瞅。</p>
+<p>进入正餐：<br>因为我们是在一个windows下配置的，所以没有网上那些主从 IP。 都是localhost<br>主数据库  my.ini添加如下</p>
+<p>在[mysqld]下添加配置数据：<br>server-id=1     #配一个唯一的ID编号，1至32。 手动设定<br>log-bin=mysql-bin  #二进制文件存放路径 ，不要在意为啥没有路径名，你就这样写</p>
+<p>#设置要进行或不要进行主从复制的数据库名，同时也要在Slave（也就是你的从库） 上设定。<br>binlog-do-db=进行主从数据库名1 ,进行主从数据库名2<br>binlog-ignore-db=不参与主从的数据库名,不参与主从的数据库名2<br>保存，重启数据库服务。</p>
+<p> 上面的这些配置的含义:</p>
+<pre><code>- server-id 顾名思义就是服务器标识id号了
+- log-bin 指定日志类型
+- binlog-do-db 是你需要复制的数据库名称，如果有多个就用逗号“,”分开
+- binlog-ignore-db 是不需要复制的数据库名称，如果有多个就用逗号“,”分开
+</code></pre><p>在主库中建立一个用户（专门用给从库连接的，注意这是在主库里面建立的，可别迷迷糊糊的到从库的命令界面敲）：</p>
+<p>1.mysql&gt;grant replication slave,reload,super on <em>.</em> to lisimin@localhost identified by ‘root’ ; </p>
+<p>2.mysql&gt;flush privileges; </p>
+<p>3.mysql&gt;show master status; # 找到File 和 Position 的值记录下来；</p>
+<p><img src="http://o9isa6w17.bkt.clouddn.com/20150108101611819.png" alt="image"></p>
+<p>简单解释一下第一句。<br>创建了一个用来复制的账号。<br>“@”前面的“lisimin”是用户名，后面的是有效的域，这里因为是本地，所以是写的是Localhost,如果是其他地址，对应填写上IP即可，不过应该不需要考虑端口问题，我创建的时候就没写端口。by 后面的“root”是密码。账户密码自己定义，不要跟root，以及你当前的用户名冲突。。</p>
+<p>2.flush….刷新权限。<br>3.这个就是你的日志值<br>下面这篇文章是介绍创建用户对应分配权限问题的，简单了解一下就行。</p>
+<p><a href="http://blog.chinaunix.net/uid-20639775-id-3249105.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-20639775-id-3249105.html</a></p>
+<p>从库配置:<br>从数据库配置my.ini:<br>[mysqld]<br>server-id=2     #唯一</p>
+<p>#设置要进行或不要进行主从复制的数据库名，同时也要在Master 上设定。<br>replicate-do-db=进行主从数据库名1 ,数据库名2<br>replicate-ignore-db=不进行数据库名1 ,数据库名2</p>
+<p>多个数据库之间用 , 分割。其实也可以这样写<br>replicate-do-db=进行主从数据库名1<br>replicate-do-db=进行主从数据库名2<br>上面的那个写法也是。</p>
+<p>其实你只需要写进行主从的库名称就可以了。<br>对了。假如你的主库叫 A 。那你的从库 最好也叫A。叫别的也可以，不过一定要是存在的。</p>
+<p>下面登陆你的从库：<br>mysql&gt;change master to master_host=’127.0.0.1’,master_user=’slave’,master_password=’slave’, master_log_file=’mysql-bin.000001’,master_log_pos=107;</p>
+<p>master_host= 这里填你主库的IP。<br>master_user=’lisimin’  刚才我们创建的那个用户。<br>master_user=’root’  ..不解释。<br>这就是我们刚才 在主库里面 show  master status；得到的值了。自行根据实际情况填写<br>master_log_file=’mysql-bin.000015’<br>master_log_pos=107</p>
+<p>如果你的主库还有是其他端口的话，<br>master_port=端口号<br>master里面常用的就这些参数了，其余的自行百度。<br>常见的有,让你先 stop slave 。。<br>那你就先 mysql&gt;stop slave 。再执行上面的代码。其他的错误，容易出现在语法，标点符号上，<br>然后 mysql&gt;start slave ;<br>mysql&gt;show slave status\G;<br>如果出现：<br>Slave_IO_Runing:Yes<br>Slave_SQL_Running :yes<br>那就说明成功了，如果出现错误，一般都是连接出问题。重新检查一下你是否正确的输入了刚才创建的用户名和密码。好了基本上就是这些问题了。</p>
+<p>尊重原创，一些资料，也是从下面两篇文章中参照的、<br><a href="http://blog.csdn.net/zhangking/article/details/5662545" target="_blank" rel="external">http://blog.csdn.net/zhangking/article/details/5662545</a><br><a href="http://blog.sina.com.cn/s/blog_6954c2c401017vvp.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_6954c2c401017vvp.html</a></p>
+<p>最后说点注意事项，从库要先创建好，以及里面的表结构，反正我是先创建好表结构的，如果你说以后涉及到添加，删除字段问题，那就是以后的事了。</p>
+<p>还有，如果你真正部署到服务器的话，一般是linux一定要写好了定时删除 日志文件的脚本文件，这个估计是以后的事了。不然，日志文件可是非常大的。定期做个备份啥的。</p>
+<p>OK，这样你就可以在你的主数据库里添加一条记录试试，看看你的从库有木有记录。（别忘开从库的服务啊、、）<br>以及，可以把主库里面的表设计为 innodb。从库设计为myisam。。来提高性能。</p>
+<p>不啰嗦了。</p>
 
       
     </div>
@@ -269,20 +295,15 @@ Quick S">
 
 <nav id="article-nav">
   
-    <a href="/2016/06/29/tp-qiniu-webuploader/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/08/01/archives/life/index2/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          基于think3.2,webuploader的七牛直接多图上传的思路。
+          青瓷
         
       </div>
     </a>
   
-  
-    <a href="/2015/08/01/archives/life/index/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">青瓷</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
   
 </nav>
 
@@ -291,7 +312,7 @@ Quick S">
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+    
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -330,15 +351,13 @@ Quick S">
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/06/29/tp-qiniu-webuploader/" title="上一篇: 基于think3.2,webuploader的七牛直接多图上传的思路。">
+            <a href="/2015/08/01/archives/life/index2/" title="上一篇: 青瓷">
                 <i class="fa fa-angle-left"></i>
             </a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2015/08/01/archives/life/index/" title="下一篇: 青瓷">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
     <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/tp-qiniu-webuploader/">基于think3.2,webuploader的七牛直接多图上传的思路。</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/13/hello-world/">不用看了，这是我留的一个样式模板</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/01/archives/life/index/">青瓷</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/01/archives/life/index2/">青瓷</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/08/mysql-master-slave-config/">Windows下多个Mysql实例配置主从</a></li></ul>

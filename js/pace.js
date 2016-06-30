@@ -262,7 +262,7 @@
       el.className = el.className.replace('pace-active', '');
       el.className += ' pace-inactive';
       document.body.className = document.body.className.replace('pace-running', '');
-      return document.body.className += ' pace-done';
+      return document.body.className += ' pace-done montage1';
     };
 
     Bar.prototype.update = function(prog) {

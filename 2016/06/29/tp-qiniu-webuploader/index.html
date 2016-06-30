@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于think3.2,webuploader的七牛直接多图上传的思路。 | MontagePa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="分享一个基于webuploader的七牛多图上传的JS。
+七牛要求的token与key我最后写。（PHP的，其他语言的自行翻文档）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于think3.2,webuploader的七牛直接多图上传的思路。">
+<meta property="og:url" content="http://montagepa.cn/2016/06/29/tp-qiniu-webuploader/index.html">
+<meta property="og:site_name" content="MontagePa">
+<meta property="og:description" content="分享一个基于webuploader的七牛多图上传的JS。
+七牛要求的token与key我最后写。（PHP的，其他语言的自行翻文档）">
+<meta property="og:updated_time" content="2016-06-29T05:51:03.507Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于think3.2,webuploader的七牛直接多图上传的思路。">
+<meta name="twitter:description" content="分享一个基于webuploader的七牛多图上传的JS。
+七牛要求的token与key我最后写。（PHP的，其他语言的自行翻文档）">
+  
+    <link rel="alternative" href="/atom.xml" title="MontagePa" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.jpg">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head_photo.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">MontagePa</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">蒙太奇葩</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">所有文章</a></li>
+                        
+                            <li><a href="/life">生活</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=lqOgoqWmpaKvotbn57j1_fs" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/Montage-LSM" title="github">github</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Code/" style="font-size: 10px;">Code</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Life/" style="font-size: 20px;">Life</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/Qiniu/" style="font-size: 10px;">Qiniu</a> <a href="/tags/ThinkPHP/" style="font-size: 10px;">ThinkPHP</a> <a href="/tags/WebUpload/" style="font-size: 10px;">WebUpload</a> <a href="/tags/win/" style="font-size: 10px;">win</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://wangzhiyao.me/">wzy</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">蒙太奇葩~MontagePa</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">MontagePa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head_photo.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">MontagePa</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">蒙太奇葩</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">所有文章</a></li>
+                
+                    <li><a href="/life">生活</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=lqOgoqWmpaKvotbn57j1_fs" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/Montage-LSM" title="github">github</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-tp-qiniu-webuploader" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/29/tp-qiniu-webuploader/" class="article-date">
+      <time datetime="2016-06-28T16:00:00.000Z" itemprop="datePublished">2016-06-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      基于think3.2,webuploader的七牛直接多图上传的思路。
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Qiniu/">Qiniu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ThinkPHP/">ThinkPHP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WebUpload/">WebUpload</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>分享一个基于webuploader的七牛多图上传的JS。</p>
+<p>七牛要求的token与key我最后写。（PHP的，其他语言的自行翻文档）</p>
+<a id="more"></a>
+<p>话不多说，直接贴代码：articel.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by Administrator on 2016/3/7.</span><br><span class="line"> */</span><br><span class="line">$(function () &#123;</span><br><span class="line">    // 初始化Web Uploader</span><br><span class="line">    var uploader = WebUploader.create(&#123;</span><br><span class="line"></span><br><span class="line">        // 选完文件后，是否自动上传。</span><br><span class="line">        auto: true,</span><br><span class="line"></span><br><span class="line">        // swf文件路径</span><br><span class="line">        swf: &quot;/Public/Extend/webuploader/Uploader.swf&quot;,</span><br><span class="line"></span><br><span class="line">        // 文件接收服务端。(直接使用七牛)</span><br><span class="line">        server: &quot;http://up.qiniu.com&quot;,//$(&quot;#hidUrl&quot;).val(),</span><br><span class="line"></span><br><span class="line">        // 选择文件的按钮。可选。</span><br><span class="line">        // 内部根据当前运行是创建，可能是input元素，也可能是flash.</span><br><span class="line">        pick: &#123;</span><br><span class="line">            id:&quot;#content_img&quot;,</span><br><span class="line">            lable:&quot;&lt;input type=&apos;button&apos; class=&apos;btn&apos; /&gt;&quot;,</span><br><span class="line">            multiple:true</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">        // 只允许选择图片文件。</span><br><span class="line">        accept: &#123;</span><br><span class="line">            title: &apos;Images&apos;,</span><br><span class="line">            extensions: &apos;gif,jpg,jpeg,bmp,png&apos;,</span><br><span class="line">            mimeTypes: &apos;image/*&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    uploader.on( &apos;uploadSuccess&apos;, function(file,response  ) &#123;</span><br><span class="line"></span><br><span class="line">        //var id=$(&quot;#hidBtn&quot;).val();</span><br><span class="line">        if(response.key)&#123;</span><br><span class="line">            //alert(1);</span><br><span class="line">            $(&quot;input[name=&apos;bg_img&apos;]&quot;).val($(&quot;#hidUrl&quot;).val()+&quot;/&quot;+response.key);</span><br><span class="line">            var a_tag=&quot;&lt;a title=&apos;点击查看&apos; target=&apos;_blank&apos; href=&apos;&quot;+$(&quot;#hidUrl&quot;).val()+&quot;/&quot;+response.key+&quot;&apos;&gt;上传成功&lt;/a&gt;&quot;;</span><br><span class="line">            $(&quot;#tips&quot;).html(a_tag);</span><br><span class="line">            console.log($(&quot;#hidUrl&quot;).val()+&quot;/&quot;+response.key);</span><br><span class="line">            console.log(&quot;-&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //重置uploader，开启此选项后</span><br><span class="line">        //uploader.reset();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    //生成多个token,file,此函数在多文件上传的时候只会被调用一次</span><br><span class="line">    uploader.on(&apos;filesQueued&apos;,function(files )&#123;</span><br><span class="line">        var number=files.length;</span><br><span class="line">        //不异步</span><br><span class="line">        $.ajaxSetup(&#123;</span><br><span class="line">            async : false</span><br><span class="line">        &#125;);</span><br><span class="line">        $.get(</span><br><span class="line">            &quot;/index.php?m=admin&amp;c=Public&amp;a=getTokens&quot;,</span><br><span class="line">            &#123;number:number&#125;,</span><br><span class="line">            function(data)&#123;</span><br><span class="line">                //console.log(&quot;data:&quot;+data);</span><br><span class="line">                CreateTokenList(data);</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">    &#125;);</span><br><span class="line">    //创建tokenlist</span><br><span class="line">    function CreateTokenList(data)&#123;</span><br><span class="line">        $(&quot;#TokenList&quot;).remove();</span><br><span class="line">        var str=&quot;&lt;div id=&apos;TokenList&apos; style=&apos;display:none&apos;&gt;&lt;ul&gt;&quot;;</span><br><span class="line">        $.each(data, function (k,v) &#123;</span><br><span class="line">            str+=&quot;&lt;li token=&apos;&quot;+ v[&apos;token_&apos;+k]+&quot;&apos; key=&apos;&quot;+ v[&apos;key_&apos;+k]+&quot;&apos;&gt;&quot;+k+&quot;&lt;/li&gt;&quot;;</span><br><span class="line">        &#125;)</span><br><span class="line">        str+=&quot;&lt;/ul&gt;&lt;/div&gt;&quot;;</span><br><span class="line">        $(&quot;body&quot;).append(str);</span><br><span class="line">    &#125;</span><br><span class="line">    ////图片上传的时候</span><br><span class="line">    //uploader.on(&apos;fileQueued&apos;,function(file)&#123;</span><br><span class="line">    //    console.log(file);</span><br><span class="line">    //&#125;);</span><br><span class="line"></span><br><span class="line">    //单个上传的时候判断。去动态的变更formatData</span><br><span class="line">    uploader.on(&apos;uploadStart&apos;,function(files )&#123;</span><br><span class="line">        //生成多个token,file</span><br><span class="line">        //console.log(&quot;k:&quot;+files);</span><br><span class="line">        var data=$(&quot;#TokenList&quot;).find(&quot;ul&gt;li&quot;);</span><br><span class="line">        var token=&quot;&quot;;</span><br><span class="line">        var key=&quot;&quot;;</span><br><span class="line">        $.each(data, function (k,v) &#123;</span><br><span class="line">            if(!$(v).attr(&quot;is_use&quot;))&#123;</span><br><span class="line">                token=$(v).attr(&apos;token&apos;);</span><br><span class="line">                key=$(v).attr(&apos;key&apos;);</span><br><span class="line">                $(v).attr(&apos;is_use&apos;,1);</span><br><span class="line">                return false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        uploader.options.formData.token = token;</span><br><span class="line">        uploader.options.formData.key = key;</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //上传进度</span><br><span class="line">    uploader.on( &apos;uploadProgress&apos;, function( file, percentage ) &#123;</span><br><span class="line">        //console.log(&quot;进度:&quot;+percentage);</span><br><span class="line">        $(&quot;#tips&quot;).text(&quot;上传进度:&quot;+percentage*100+&quot;%&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="前端部分："><a href="#前端部分：" class="headerlink" title="前端部分："></a>前端部分：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--外部的图片转换为webuploader上传--&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;&#123;$b_static&#125;Extend/webuploader/webuploader.css&quot;/&gt;</span><br><span class="line">    &lt;!--不含日志的。减少不必要的请求--&gt;</span><br><span class="line">    &lt;script src=&quot;&#123;$b_static&#125;Extend/webuploader/webuploader.min.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;!--JS--&gt;</span><br><span class="line">    &lt;script src=&quot;&#123;$b_static&#125;js/admin/article.js&quot;&gt;&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">                            &lt;div class=&quot;control-group&quot;&gt;</span><br><span class="line">                                &lt;label class=&quot;control-label&quot;&gt;背景图片&lt;/label&gt;</span><br><span class="line">                                &lt;div class=&quot;controls&quot;&gt;</span><br><span class="line">                                    &lt;p id=&quot;tips&quot;&gt;此处图片上传为下面的图片上传，允许多图上传&lt;/p&gt;</span><br><span class="line">                                    &lt;span id=&quot;content_img&quot;&gt;选择图片&lt;/span&gt;</span><br><span class="line">                                    &lt;input type=&quot;hidden&quot; name=&quot;content_img&quot; /&gt;</span><br><span class="line">                                &lt;/div&gt;</span><br><span class="line">                            &lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="两个link就不解释了。一个是webuploader的样式文件，一个是js文件。"><a href="#两个link就不解释了。一个是webuploader的样式文件，一个是js文件。" class="headerlink" title="两个link就不解释了。一个是webuploader的样式文件，一个是js文件。"></a>两个link就不解释了。一个是webuploader的样式文件，一个是js文件。</h4><pre><code>php，print_r的值：
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Array</span><br><span class="line">(</span><br><span class="line">    [0] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [token_0] =&gt; h6NVJgW4C-WLJlyhdyu_fsOBQa9dF5NZvaa35g2f:Vw4mq0PYTRSUdnBH-HOlydIqHWI=:eyJzY29wZSI6ImFydGljbGU6YXJ0aWNsZV81NmRlN2Q4YmRhOGUxNDQ0MDkxXzAiLCJkZWFkbGluZSI6MTQ1NzQyNTMwN30=</span><br><span class="line">            [key_0] =&gt; article_56de7d8bda8e1444091_0</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    [1] =&gt; Array</span><br><span class="line">        (</span><br><span class="line">            [token_1] =&gt; h6NVJgW4C-WLJlyhdyu_fsOBQa9dF5NZvaa35g2f:2FXSS8JkojeeVDbgOJF-wTrEJG0=:eyJzY29wZSI6ImFydGljbGU6YXJ0aWNsZV81NmRlN2Q4YmRhOGUxNDQ0MDkxXzEiLCJkZWFkbGluZSI6MTQ1NzQyNTMwN30=</span><br><span class="line">            [key_1] =&gt; article_56de7d8bda8e1444091_1</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>多维数组，结构是key值与里面的token<em> key</em> 后面的相同。这个是个人生成token 与key的习惯。自行修改就好。</p>
+<p>说一下思路，<br>uploader对象的创建是根据文档里面，之前搞的上传的方式是先传到服务器，然后服务器再去传七牛。那样还得费服务器的带宽，比较浪费，就换了一种方式。直接传七牛。<br>所以 server 那边也就换成了：”<a href="http://up.qiniu.com”" target="_blank" rel="external">http://up.qiniu.com”</a><br>另外多图上传的时候需要在pick里面设置multiple 设置为true。开启多图上传。</p>
+<p>filesQueued 这个事件是针对多图上传的事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var number=files.length;</span><br></pre></td></tr></table></figure>
+<p>是为了获取上传文件的数量。因为你在那个页面，不知道要上传多少文件。所以当你选中后，获取文件数量，根据数量去后台同步的把token与key 请求回来。<br>这里说下，为什么要同步，而不是异步呢，因为如果异步的话，他可能在你回调回来之前就去做上传动作了，导致上传失败。所以这边是要设置同步的。<br>CreateTokenList 这个函数为的是将返回过来的token与key 存起来。</p>
+<p>最后在 uploadStart 事件的时候，摘出其中一个token与key。去设置到上传参数formData中去。uploadStart 是一个文件执行一次，所以纵然是多图上传，也是一个个的传上去。</p>
+<p>下面两个事件：uploadProgress 就是获取进度了。是单个文件的进度，想做特效的，就具体可以根据你文件上传进度和现在的文件数量。具体做特效了，如果想看效果，建议用360之类的，设置一下你浏览器的上传速度，就可以看到效果了。<br>And….<br>图片上传成功后：<br>uploadSuccess也就是这个事件的时候。<br>确保你的response里面的响应带回了Key值。这样你的图片就算是上传成功了。<br>使用你七牛上传对应空间的域名 ，注意理解这句话，后面跟上你的responese.key 就是你上传图片的链接了。<br>比如：article空间七牛给你的对应域名是： dasd.111.com ，返回的responese.key 的值是 abc<br>那么你的图片访问路径便是： dasd.111.com/abc</p>
+<p>我是分割线：—————–(关于php这边生成的token)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">$data=$this-&gt;mkQiniuToken(C(&apos;Qiniu.article_bucket&apos;),&apos;article_&apos;,2);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @param $bucket.七牛存储空间</span><br><span class="line">     * @param $prefix.生成的文件前缀</span><br><span class="line">     * @param int $more。是否生成多个。此处填写生成的数量，多个的前缀取配置</span><br><span class="line">     * return 返回生成的 token 和key</span><br><span class="line">     */</span><br><span class="line">    public function mkQiniuToken($bucket,$prefix,$more=&apos;&apos;)&#123;</span><br><span class="line">        import(&quot;Org.Util.Auth&quot;);</span><br><span class="line">        $auth=new Auth(C(&apos;Qiniu.AK&apos;), C(&apos;Qiniu.SK&apos;));</span><br><span class="line">        $title=$prefix;</span><br><span class="line">        $file_key=$title.uniqid().rand(111111, 999999);</span><br><span class="line">//        $file_key=$title.uniqid().rand(111111, 999999);;</span><br><span class="line">        if($more&gt;1)&#123;</span><br><span class="line">            $arr=array();</span><br><span class="line">            for($i=0;$i&lt;$more;$i++)&#123;</span><br><span class="line">                $token = $auth-&gt;uploadToken($bucket,$file_key.&quot;_&quot;.$i);</span><br><span class="line">                $arr[$i][&apos;token_&apos;.$i]=$token;</span><br><span class="line">                $arr[$i][&apos;key_&apos;.$i]=$file_key.&quot;_&quot;.$i;</span><br><span class="line">            &#125;</span><br><span class="line">            //返回多维token与key</span><br><span class="line">            return $arr;</span><br><span class="line">        &#125;</span><br><span class="line">        else&#123;</span><br><span class="line">            //单一的token 与KEY</span><br><span class="line">            $token = $auth-&gt;uploadToken($bucket,$file_key);</span><br><span class="line"></span><br><span class="line">            return array(&apos;token&apos;=&gt;$token,&apos;file_key&apos;=&gt;$file_key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>mkQiniuToken 这个函数是我自己封装的生成七牛token的函数，当然里面核心的也是根据七牛给php提供的案例去写的。此函数基于think3.2 . 用think的朋友可以拿去试试，注意自己AK与SK的秘钥别写错。另外，调用函数的时候别忘了use Qiniu\Auth; 里面的各种import。</p>
+<p>有一点是要注意的，在生成token的时候最好不要跟key对应上。就单纯的生成KEY。因为很有可能是你前端去生成一个唯一标识。<br>如果你在生成token的时候指定了key.那你上传的时候就蒙逼了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2016/06/13/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">不用看了，这是我留的一个样式模板</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#前端部分："><span class="toc-number">1.</span> <span class="toc-text">前端部分：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#两个link就不解释了。一个是webuploader的样式文件，一个是js文件。"><span class="toc-number">2.</span> <span class="toc-text">两个link就不解释了。一个是webuploader的样式文件，一个是js文件。</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2016/06/13/hello-world/" title="下一篇: 不用看了，这是我留的一个样式模板">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/tp-qiniu-webuploader/">基于think3.2,webuploader的七牛直接多图上传的思路。</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/13/hello-world/">不用看了，这是我留的一个样式模板</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/01/archives/life/index/">青瓷</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/01/archives/life/index2/">青瓷</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/01/08/mysql-master-slave-config/">Windows下多个Mysql实例配置主从</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 MontagePa
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >PV: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">this read: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
